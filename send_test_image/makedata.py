@@ -90,8 +90,8 @@ def make_header(extras={}):
     header_dict = {
         "DATE-OBS": datetime.datetime.now().isoformat().split('.')[0],
         "IMAGETYP": "TEST DATA",
-        "OBJCTRA": random.random()*24,
-        "OBJCTDEC": (random.random() * 180) - 90,
+        "CRVAL1": random.random()*24,
+        "CRVAL2": (random.random() * 180) - 90,
         "ALTITUDE": round(random.random() * 60 + 30, 3),
         "AZIMUTH": round(random.random() * 180, 3),
         "FILTER": "'L'",

@@ -1,2 +1,7 @@
 .vscode
 .DS_Store
+venv/
+send_test_image/generated_files/*
+!send_test_image/generated_files/README.md
+send_test_image/base_data
+send_test_image/__pycache__/

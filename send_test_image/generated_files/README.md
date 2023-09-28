@@ -1,0 +1,1 @@
+This is a directory used to store the files the script uploads to AWS.

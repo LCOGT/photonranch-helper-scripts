@@ -10,7 +10,6 @@ from makedata import make_header, make_data_files
 # TODO: 
 # - make fits files match range of normal data (ie [0,2^64] instead of [-0.5, 0.5])
 # - large fits should be different size than small fits
-# - generate thumbnails
 
 TEXT_HEADER_PATH = "./generated_files/generated.txt"
 FITS_00_PATH = "./generated_files/generated.fits.bz2"
@@ -28,12 +27,13 @@ def get_upload_url(filename, s3_directory, info_channel=None):
     response = requests.post(url, json.dumps(request_body))
     return response.json()
 
-def increment_filenumber():
-    number = 0
-    with open("filenumber.txt", "r") as f:
-        number = int(f.read())
-    with open("filenumber.txt", "w") as f:
-        f.write(str(number + 1))
+# Gets the latest image at the site, and adds 1 to the file number at the end.
+def get_next_filenumber(site):
+    url = f"http://api.photonranch.org/api/{site}/latest_images/1"
+    response = requests.get(url).json()
+    base_filename = response[0]['base_filename'] 
+    filenumber = int(base_filename.split('-')[-1])
+    return filenumber + 1
 
 def get_list_of_filenames(site, data_type, utc_time, files):
 
@@ -42,9 +42,7 @@ def get_list_of_filenames(site, data_type, utc_time, files):
     datestring = utc_time.strftime('%Y%m%d')
 
     # Read the filenumber to use
-    filenumber = 0
-    with open("./filenumber.txt",'r') as f:
-        filenumber = int(f.read())
+    filenumber = get_next_filenumber(site)
     zero_padding = "0" * (8 - len(str(filenumber)))
     filenumber = f"{zero_padding}{filenumber}"
 
@@ -63,7 +61,7 @@ def get_list_of_filenames(site, data_type, utc_time, files):
     return file_list
 
 
-def upload_files(filename_list, s3dir, info_channel):
+def upload_files(filename_list, s3dir, info_channel, site):
     for f in filename_list:
         upload_url = get_upload_url(f[0], s3dir, info_channel)
         with open(f[1], 'rb') as base_file:
@@ -71,7 +69,6 @@ def upload_files(filename_list, s3dir, info_channel):
             upload_response = requests.post(upload_url["url"], upload_url["fields"], files=data)
             print(f'uploading {upload_url["fields"]["key"]}')
             print(upload_response)
-    increment_filenumber()
 
 
 def upload_test_files(site, data_type, files, s3dir, info_channel):
@@ -84,7 +81,7 @@ def upload_test_files(site, data_type, files, s3dir, info_channel):
     # get list of files to upload
     files_to_upload = get_list_of_filenames(site, data_type, time_now, files)
 
-    upload_files(files_to_upload, s3dir, info_channel)
+    upload_files(files_to_upload, s3dir, info_channel, site)
 
         
     
