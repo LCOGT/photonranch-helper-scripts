@@ -98,7 +98,7 @@ def make_header(extras={}):
         "AIRMASS": round(random.random() * 2 + 1, 3),
         "EXPTIME": round(random.randint(1,20), 3),
         "USERID": "'google-oauth2|100354044221813550027'",
-        "USERNAME": "'Tim Beccue'", 
+        "USERNAME": "'Test Script'", 
         "HEADER": "'header'",
         **extras
     }
