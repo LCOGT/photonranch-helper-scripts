@@ -73,7 +73,7 @@ six==1.16.0
 terminado==0.9.4
 testpath==0.4.4
 tifffile==2021.4.8
-tornado==6.1
+tornado==6.3.3
 tqdm==4.66.1
 traitlets==5.0.5
 typing-extensions==3.10.0.0
